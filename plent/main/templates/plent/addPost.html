@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block head %}
+  <title>Plent</title>
+{% endblock head %}
+{% block body %}
+{% if message %}
+  <h5>{{message}}</h5>
+{% endif %}
+
+  <form action="{% url 'addPost' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="topic" placeholder="topic">
+    <input type="text" name="content" width="600px" height="400px">
+    <input type="submit">
+  </form>
+  <a href="{% url 'index' %}">home</a>
+{% endblock body %}

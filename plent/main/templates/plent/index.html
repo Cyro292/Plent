@@ -1,0 +1,18 @@
+{% extends "layout.html" %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+<title>Plent</title>
+<script src="{% static '/js/script.js' %}"></script>
+<script>
+	document.addEventListener("DOMContentLoaded", () => {
+		createPosts(1,10);
+	});
+</script>
+{% endblock head %} {% block body %} {% if username %}
+<h1>Welcome {{username}}</h1>
+{% endif %}
+
+<a href="{% url 'addPost' %}">make new Post</a>
+<a href="{% url 'logout' %}">logout</a>
+
+<div class="posts"></div>
+{% endblock body %}
