@@ -1,10 +1,10 @@
-from tracemalloc import start
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, HttpResponse
+from django.contrib import messages
+from django.shortcuts import redirect, render
+from django.http import HttpResponse
 from . import models
 
 # Create your views here.
@@ -12,10 +12,22 @@ from . import models
 def checkAuthentication(f):
     def wrapper(request):
         if not request.user.is_authenticated:
-            return render(request, "plent/login.html")
+            return redirect('login')
             
         return f(request)
     return wrapper 
+
+def createPost(user, topic, content):
+    
+    try:
+        client = models.Client.objects.get(user=user)
+    except ObjectDoesNotExist:
+        client = models.Client(user=user)
+        client.save()
+        
+    post = models.Post(topic=topic, content=content)
+    post.save()
+    post.authors.add(client)
 
 @checkAuthentication
 def index(request):
@@ -27,12 +39,12 @@ def login_view(request):
         username = request.POST["username"]
         password = request.POST["password"]
         
-        user = authenticate(request, username=username, password=password)
+        user = authenticate(request, username=username, password=password) 
         
         if user is None:
-            return render(request, "plent/login.html", {
-                "message": "username or password incorrect"
-            })
+            messages.info(request, "user dose not exist")    
+            return redirect('login')
+        
         
         login(request, user)
         
@@ -74,16 +86,7 @@ def addPost(request):
         topic = request.POST["topic"]
         content = request.POST["content"]
     
-        try:
-            client = models.Client.objects.get(user=request.user)
-        except ObjectDoesNotExist:
-            client = models.Client(user=request.user)
-            client.save()
-        
-        post = models.Post(topic=topic, content=content)
-        post.save()
-        
-        post.authors.add(client)
+        createPost(request.user, topic, content)
             
         return render(request, "plent/addPost.html", {
                 "message": "added"
