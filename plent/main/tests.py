@@ -1,7 +1,5 @@
-
 from django.test import TestCase as Test, Client
-from django.contrib.auth.models import User
-from django.core import exceptions
+from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from django.db.utils import IntegrityError
 from django.urls import reverse
@@ -13,9 +11,9 @@ class PostTest(Test):
     
     def setUp(self) -> None:
         
-        user1 = User.objects.create_user(username="user1", email="", password="p1")
-        user2 = User.objects.create_user(username="user2", email="", password="p2")
-        user3 = User.objects.create_user(username="user3", email="", password="p3")
+        user1 = get_user_model().objects.create_user(username="user1", email="", password="p1")
+        user2 = get_user_model().objects.create_user(username="user2", email="", password="p2")
+        user3 = get_user_model().objects.create_user(username="user3", email="", password="p3")
         user1.save()
         user2.save()
         user3.save()
@@ -34,7 +32,7 @@ class PostTest(Test):
         """test whether Client is unique
         """
         
-        user = User.objects.get(username="user1")
+        user = get_user_model().objects.get(username="user1")
         self.assertRaises(IntegrityError, models.Client.objects.create, user=user)
      
     def test_redirect(self):
@@ -47,10 +45,10 @@ class PostTest(Test):
             self.assertEqual(response.status_code, 302)
         
     def test_login(self):
-        c = Client()
-        response = c.post("login", {"username":"user1", "password":"p1"})
-        
-        #TODO
+        #c = Client()
+        #response = c.post("login", {"username":"user1", "password":"p1"})
+        pass
+
         
     
     def test_creating_Post(self):

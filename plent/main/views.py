@@ -95,12 +95,12 @@ def addPost(request):
         return render(request, "plent/addPost.html")
     
 @checkAuthentication
-def posts(request):
+def posts(request) -> HttpResponse:
     start = int(request.GET["start"]) -1
     end = int(request.GET["end"]) -1
     
-    posts = models.Post.objects.order_by("-id")[start:end]
+    allPosts = models.Post.objects.order_by("-id")[start:end]
     
-    data = serializers.serialize("json", posts)
+    data = serializers.serialize("json", allPosts)
     return HttpResponse(data)
     
