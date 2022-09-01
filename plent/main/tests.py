@@ -35,11 +35,9 @@ class PostTest(Test):
         user = get_user_model().objects.get(username="user1")
         self.assertRaises(IntegrityError, models.Client.objects.create, user=user)
      
-    def test_redirect(self):
-        
+    def test_redirect(self):     
         addresses = ["index", "addPost", "logout"]
-        c = Client()
-        
+        c = Client()    
         for url in addresses:
             response = c.get(reverse(url))
             self.assertEqual(response.status_code, 302)

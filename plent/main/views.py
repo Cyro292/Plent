@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import serializers
 from django.contrib import messages
@@ -51,8 +51,8 @@ def login_view(request):
         return render(request, "plent/index.html", {
             "username": username
         })
-    else:
-        return render(request, "plent/login.html")
+    
+    return render(request, "plent/login.html")
     
 @checkAuthentication
 def logout_view(request):
@@ -65,9 +65,9 @@ def register(request):
         password = request.POST["password"]
 
         try: 
-            user = User.objects.create_user(username=username, email="", password=password)
+            user = get_user_model().objects.create_user(username=username, email="", password=password)
             user.save()
-        except:
+        except ObjectDoesNotExist:
             return render(request, "plent/register.html", {
                 "message": f"{username} already exists"
             })
@@ -77,8 +77,8 @@ def register(request):
         return render(request, "plent/index.html", {
             "username": username
         })
-    else:
-        return render(request, "plent/register.html")
+    
+    return render(request, "plent/register.html")
     
 @checkAuthentication
 def addPost(request):
@@ -91,8 +91,8 @@ def addPost(request):
         return render(request, "plent/addPost.html", {
                 "message": "added"
             })
-    else:
-        return render(request, "plent/addPost.html")
+    
+    return render(request, "plent/addPost.html")
     
 @checkAuthentication
 def posts(request) -> HttpResponse:
