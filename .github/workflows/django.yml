@@ -25,11 +25,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install django --upgrade
-    - name: Install Tests
-      run: |
-        pip install pylint-django
     - name: Run Tests
       run: |
         python plent/manage.py test
-        pylint --load-plugins=pylint_django $(git ls-files '*.py')
     
