@@ -26,6 +26,5 @@ jobs:
         pip install pylint-django
     - name: Run Tests
       run: |
-        python plent/manage.py test
-        pylint --load-plugins=pylint_django $(git ls-files '*.py')
+        pylint --load-plugins=pylint_django --django-settings-module=plent.settings --disable=C0303,C0114,C0116 $(git ls-files '*.py')
     
